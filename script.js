@@ -53,8 +53,17 @@ function compareEntries(a, b) {
   const group = reportGroup(a);
   const aDate = dateRank(a.dataset.date);
   const bDate = dateRank(b.dataset.date);
-  const dateDiff = group === 0 ? aDate - bDate : bDate - aDate;
-  if (dateDiff !== 0) return dateDiff;
+  const aHasDate = aDate !== Number.NEGATIVE_INFINITY;
+  const bHasDate = bDate !== Number.NEGATIVE_INFINITY;
+
+  if (group === 0 && aHasDate !== bHasDate) {
+    return aHasDate ? -1 : 1;
+  }
+
+  if (aHasDate && bHasDate) {
+    const dateDiff = group === 0 ? aDate - bDate : bDate - aDate;
+    if (dateDiff !== 0) return dateDiff;
+  }
 
   return (a.dataset.reportId || "").localeCompare(b.dataset.reportId || "");
 }
